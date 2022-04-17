@@ -16,16 +16,6 @@ use L5Swagger\GeneratorFactory;
 class SwaggerController extends BaseController
 {
     /**
-     * @var GeneratorFactory
-     */
-    protected $generatorFactory;
-
-    public function __construct(GeneratorFactory $generatorFactory)
-    {
-        $this->generatorFactory = $generatorFactory;
-    }
-
-    /**
      * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
      * @param  Request  $request
@@ -35,7 +25,7 @@ class SwaggerController extends BaseController
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */
-    public function docs(Request $request)
+    public function docs(Request $request, GeneratorFactory $generatorFactory)
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
@@ -58,7 +48,7 @@ class SwaggerController extends BaseController
         $filePath = $config['paths']['docs'].'/'.$targetFile;
 
         if ($config['generate_always']) {
-            $generator = $this->generatorFactory->make($documentation);
+            $generator = $generatorFactory->make($documentation);
 
             try {
                 $generator->generateDocs();
